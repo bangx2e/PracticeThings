@@ -168,6 +168,7 @@ public class BoardController {
 		logger.info("/getSchedule");
 		List<Calendar> cal = boardService.getSchedule(date);
 		model.addAttribute("cal", cal);
+		
 		logger.info("/getSchedule 호출 성공");
 		return "/board/getSchedule";
 	}
