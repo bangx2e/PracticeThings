@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="boardMapper">
+	<!-- <select id="test" resultType="testVo"> -->
+	<!-- SELECT * FROM DEPT -->
+	<!-- </select> -->
+	<select id="list" resultType="boardVO">
+		SELECT
+				* 
+		  FROM BOARD 
+		 ORDER BY BOARDNUM DESC
+	</select>
+
+	<!-- 게시글 상세정보 -->
+	<select id="detail" parameterType="int" resultType="boardVO">
+		SELECT
+				* 
+		  FROM BOARD 
+		 WHERE BOARDNUM = #{boardNum}
+	</select>
+
+	<delete id="delete" parameterType="Integer">
+		DELETE 
+		  FROM BOARD 
+		 WHERE BOARDNUM = #{boardNum}
+	</delete>
+	<delete id="deletelist" parameterType="Integer">
+		DELETE 
+		  FROM BOARD 
+		 WHERE BOARDNUM = #{boardNum}
+	</delete>
+	<select id="getmonthOrigin" parameterType="String" resultType="YearMonthDay">
+		<![CDATA[SELECT 
+		      			COUNT (*) OVER (ORDER BY WEEK_NUM) WEEK_NUM 
+					    , MIN (DECODE (DAYS, 1, TODAY)) SUN 
+					    , MIN (DECODE (DAYS, 2, TODAY)) MON 
+					    , MIN (DECODE (DAYS, 3, TODAY)) TUE 
+					    , MIN (DECODE (DAYS, 4, TODAY)) WED 
+					    , MIN (DECODE (DAYS, 5, TODAY)) THU 
+					    , MIN (DECODE (DAYS, 6, TODAY)) FRI 
+					    , MIN (DECODE (DAYS, 7, TODAY)) SAT 
+					    , MONTH
+		  		  FROM  ( SELECT  
+						            TO_CHAR (FIRST_DAY + LEVEL - 1, 'D') DAYS 
+						          , TO_CHAR (FIRST_DAY + LEVEL - 1, 'FMDD') TODAY 
+						          , TO_CHAR (FIRST_DAY + LEVEL - 1, 'FMMM') MONTH 
+						          , TO_CHAR (FIRST_DAY + LEVEL - 1, 'YYYYMMDD') TODAY_STR 
+						          , TO_CHAR (FIRST_DAY + LEVEL ,'IW') WEEK_NUM
+						          , TO_CHAR (FIRST_DAY + LEVEL - 1,'DY') DAYS_K 
+					        FROM  (
+					         		SELECT 
+					         			   TO_DATE(#{date}, 'YYYYMM') FIRST_DAY 
+					         		  FROM DUAL
+					          	   ) 
+					     CONNECT BY FIRST_DAY + LEVEL - 1 <= TRUNC(LAST_DAY(TO_DATE(#{date}, 'YYYYMM'))) 
+					    )
+		  		 GROUP BY WEEK_NUM,MONTH]]>
+	</select>
+	<select id="thismonth" parameterType="String" resultType="YearMonthDay">
+		<![CDATA[SELECT WEEK_NUM
+					    , SUM(DECODE(YOIL, '1', DD)) AS SUN
+					    , SUM(DECODE(YOIL, '2', DD)) AS MON
+					    , SUM(DECODE(YOIL, '3', DD)) AS TUE
+					    , SUM(DECODE(YOIL, '4', DD)) AS WED
+					    , SUM(DECODE(YOIL, '5', DD)) AS THU
+					    , SUM(DECODE(YOIL, '6', DD)) AS FRI
+					    , SUM(DECODE(YOIL, '7', DD)) AS SAT
+					    , MONTH
+					    , YEAR
+				   FROM (
+				         SELECT TO_NUMBER(A.DD) AS DD
+				          	    , TO_CHAR(TO_DATE(A.YM||A.DD ,'YYYYMMDD'), 'MM') AS MONTH
+				          	    , TO_CHAR(TO_DATE(A.YM||A.DD ,'YYYYMMDD'), 'YYYY') AS YEAR
+				             	, A.YM || A.DD    AS YMD
+				             	, TO_CHAR(TO_DATE(A.YM || A.DD, 'YYYYMMDD'), 'D') AS YOIL
+				             	, CEIL((ROWNUM + 7 - TO_NUMBER(TO_CHAR(TO_DATE(A.YM || A.DD, 'YYYYMMDD'), 'D'))) / 7) AS WEEK_NUM
+				             	, CEIL((TO_CHAR(TO_DATE(A.YM || A.DD,'YYYYMMDD'),'DDD') +
+				                  TO_CHAR(TO_DATE(SUBSTR(A.YM || A.DD,1,4)||'0101','YYYYMMDD'),'D') - 1) / 7) AS YY_WEEK
+				          FROM (
+				                SELECT #{date}              AS YM
+				                     , LPAD(ROWNUM, 2, '0') AS DD
+				                  FROM DUAL
+				                CONNECT BY LEVEL <= 31
+				                ) A
+				          WHERE A.DD <= TO_CHAR(LAST_DAY(TO_DATE(A.YM || '01', 'YYYYMMDD')), 'DD')
+				         )
+				   GROUP BY WEEK_NUM,MONTH,YEAR
+				   ORDER BY WEEK_NUM]]>
+	</select>
+	
+	<update id="iOrU" parameterType="boardVO">
+		MERGE
+		 INTO BOARD a
+		USING DUAL
+		   ON (a.BOARDNUM = #{boardNum})
+		 WHEN MATCHED THEN
+		 	  UPDATE SET 
+			  TITLE = #{title}
+			, WRITER = #{writer}
+			, BOARDCONTENT = #{boardContent}
+	  	 WHEN NOT MATCHED THEN
+	  	 	  INSERT (a.BOARDNUM, a.TITLE, a.BOARDCONTENT, a.WRITER)
+			  VALUES (BOARDNUM_SQ.NEXTVAL, #{title}, #{boardContent}, #{writer})
+	</update>
+<!-- 	<update id="update" parameterType="boardVO"> -->
+<!-- 		UPDATE BOARD SET -->
+<!-- 			  TITLE = #{title} -->
+<!-- 			, WRITER = #{writer} -->
+<!-- 			, BOARDCONTENT = #{boardContent} -->
+<!-- 		WHERE BOARDNUM = #{boardNum} -->
+<!-- 	</update> -->
+		
+<!-- 	<insert id="insert" parameterType="boardVO"> -->
+<!-- 		INSERT INTO BOARD( -->
+<!-- 							 BOARDNUM -->
+<!-- 						   , TITLE -->
+<!-- 						   , BOARDCONTENT -->
+<!-- 						   , WRITER -->
+<!-- 						  )  -->
+<!-- 						  VALUES -->
+<!-- 						  ( -->
+<!-- 						  	 BOARDNUM_SQ.NEXTVAL -->
+<!-- 						   , #{title} -->
+<!-- 						   , #{boardContent} -->
+<!-- 						   , #{writer} -->
+<!-- 						  ) -->
+<!-- 	</insert> -->
+	<update id="saveSchedule" parameterType="calendar">
+  	 	  INSERT INTO CALENDAR (CALNO,CALYEAR,CALMONTH,CALDAY,CALTIME,CALREQ,CALDATE,CALCONTENTS)
+		  VALUES (CALNO_SEQ.NEXTVAL, #{calYear},#{calMonth}, #{calDay}, #{calTime},#{calReq},#{calDate},#{calContents})
+	</update>
+	<select id="list" resultType="boardVO" parameterType="String">
+		SELECT
+				* 
+		  FROM CALENDAR 
+		  WHERE CALDATE=#{calDate}
+		 ORDER BY CALNO DESC
+	</select>
+</mapper>
