@@ -27,6 +27,7 @@
 		  FROM BOARD 
 		 WHERE BOARDNUM = #{boardNum}
 	</delete>
+
 	<delete id="deletelist" parameterType="Integer">
 		DELETE 
 		  FROM BOARD 
@@ -59,36 +60,72 @@
 					    )
 		  		 GROUP BY WEEK_NUM,MONTH]]>
 	</select>
-	<select id="thismonth" parameterType="String" resultType="YearMonthDay">
-		<![CDATA[SELECT WEEK_NUM
-					    , SUM(DECODE(YOIL, '1', DD)) AS SUN
-					    , SUM(DECODE(YOIL, '2', DD)) AS MON
-					    , SUM(DECODE(YOIL, '3', DD)) AS TUE
-					    , SUM(DECODE(YOIL, '4', DD)) AS WED
-					    , SUM(DECODE(YOIL, '5', DD)) AS THU
-					    , SUM(DECODE(YOIL, '6', DD)) AS FRI
-					    , SUM(DECODE(YOIL, '7', DD)) AS SAT
-					    , MONTH
-					    , YEAR
-				   FROM (
-				         SELECT TO_NUMBER(A.DD) AS DD
-				          	    , TO_CHAR(TO_DATE(A.YM||A.DD ,'YYYYMMDD'), 'MM') AS MONTH
-				          	    , TO_CHAR(TO_DATE(A.YM||A.DD ,'YYYYMMDD'), 'YYYY') AS YEAR
-				             	, A.YM || A.DD    AS YMD
-				             	, TO_CHAR(TO_DATE(A.YM || A.DD, 'YYYYMMDD'), 'D') AS YOIL
-				             	, CEIL((ROWNUM + 7 - TO_NUMBER(TO_CHAR(TO_DATE(A.YM || A.DD, 'YYYYMMDD'), 'D'))) / 7) AS WEEK_NUM
-				             	, CEIL((TO_CHAR(TO_DATE(A.YM || A.DD,'YYYYMMDD'),'DDD') +
-				                  TO_CHAR(TO_DATE(SUBSTR(A.YM || A.DD,1,4)||'0101','YYYYMMDD'),'D') - 1) / 7) AS YY_WEEK
-				          FROM (
-				                SELECT #{date}              AS YM
-				                     , LPAD(ROWNUM, 2, '0') AS DD
-				                  FROM DUAL
-				                CONNECT BY LEVEL <= 31
-				                ) A
-				          WHERE A.DD <= TO_CHAR(LAST_DAY(TO_DATE(A.YM || '01', 'YYYYMMDD')), 'DD')
-				         )
-				   GROUP BY WEEK_NUM,MONTH,YEAR
-				   ORDER BY WEEK_NUM]]>
+	<select id="getMonth" parameterType="String" resultType="YearMonthDay">
+		<![CDATA[ SELECT   WEEK_NUM
+	    , SUM(DECODE(YOIL, '1', DD)) AS SUN
+	    , SUM(DECODE(YOIL, '2', DD)) AS MON
+	    , SUM(DECODE(YOIL, '3', DD)) AS TUE
+	    , SUM(DECODE(YOIL, '4', DD)) AS WED
+	    , SUM(DECODE(YOIL, '5', DD)) AS THU
+	    , SUM(DECODE(YOIL, '6', DD)) AS FRI
+	    , SUM(DECODE(YOIL, '7', DD)) AS SAT
+	    , MONTH
+	    , YEAR
+	    , MAX(CASE WHEN CHK = 'Y' AND YOIL = '1' THEN 'Y'
+	      	  ELSE 'N' END ) AS CHK_SUN	    
+	    , MAX(CASE WHEN CHK = 'Y' AND YOIL = '2' THEN 'Y'
+	      	  ELSE 'N' END ) AS CHK_MON    
+	    , MAX(CASE WHEN CHK = 'Y' AND YOIL = '3' THEN 'Y'
+	      	  ELSE 'N' END ) AS CHK_TUE	    
+	    , MAX(CASE WHEN CHK = 'Y' AND YOIL = '4' THEN 'Y'
+	      	  ELSE 'N' END ) AS CHK_WED   
+	    , MAX(CASE WHEN CHK = 'Y' AND YOIL = '5' THEN 'Y'
+	      	  ELSE 'N' END ) AS CHK_THU   
+	    , MAX(CASE WHEN CHK = 'Y' AND YOIL = '6' THEN 'Y'
+	      	  ELSE 'N' END ) AS CHK_FRI   
+	    , MAX(CASE WHEN CHK = 'Y' AND YOIL = '7' THEN 'Y'
+	      	  ELSE 'N' END ) AS CHK_SAT  
+   FROM (
+			SELECT 
+					A.DD
+				  , A.MONTH
+				  , A.YEAR
+				  , A.YMD
+				  , A.YOIL
+				  , A.WEEK_NUM
+				  , A.YY_WEEK
+				  , NVL2(B.CHK, 'Y', 'N') AS CHK
+			FROM (
+				     SELECT TO_NUMBER(A.DD) AS DD
+				      	    , TO_CHAR(TO_DATE(A.YM||A.DD ,'YYYYMMDD'), 'MM') AS MONTH
+				      	    , TO_CHAR(TO_DATE(A.YM||A.DD ,'YYYYMMDD'), 'YYYY') AS YEAR
+				         	, A.YM || A.DD    AS YMD
+				         	, TO_CHAR(TO_DATE(A.YM || A.DD, 'YYYYMMDD'), 'D') AS YOIL
+				         	, CEIL((ROWNUM + 7 - TO_NUMBER(TO_CHAR(TO_DATE(A.YM || A.DD, 'YYYYMMDD'), 'D'))) / 7) AS WEEK_NUM
+				         	, CEIL((TO_CHAR(TO_DATE(A.YM || A.DD,'YYYYMMDD'),'DDD') +
+				              TO_CHAR(TO_DATE(SUBSTR(A.YM || A.DD,1,4)||'0101','YYYYMMDD'),'D') - 1) / 7) AS YY_WEEK
+				      FROM (
+				            SELECT TO_CHAR(TO_DATE(#{date},'YYYYMM'),'YYYYMM')              AS YM
+				                 , LPAD(ROWNUM, 2, '0') AS DD
+				              FROM DUAL
+				            CONNECT BY LEVEL <= 31
+				            ) A
+				      WHERE A.DD <= TO_CHAR(LAST_DAY(TO_DATE(A.YM || '01', 'YYYYMMDD')), 'DD')
+					) A
+				  , (SELECT DISTINCT CALDAY AS CHK
+					   FROM SYSTEM.CALENDAR
+					  WHERE 1=1
+					    AND TO_CHAR(CALDATE,'YYYYMM') = #{date}
+					) B	
+			WHERE 1=1
+			AND A.DD = B.CHK(+)
+			ORDER BY DD
+         )
+   GROUP BY WEEK_NUM,MONTH,YEAR
+   ORDER BY WEEK_NUM
+   
+   
+   ]]>
 	</select>
 	
 	<update id="iOrU" parameterType="boardVO">
@@ -132,11 +169,16 @@
   	 	  INSERT INTO CALENDAR (CALNO,CALYEAR,CALMONTH,CALDAY,CALTIME,CALREQ,CALDATE,CALCONTENTS)
 		  VALUES (CALNO_SEQ.NEXTVAL, #{calYear},#{calMonth}, #{calDay}, #{calTime},#{calReq},#{calDate},#{calContents})
 	</update>
-	<select id="list" resultType="boardVO" parameterType="String">
+	<select id="getSchedule" resultType="calendar" parameterType="String">
 		SELECT
 				* 
 		  FROM CALENDAR 
-		  WHERE CALDATE=#{calDate}
-		 ORDER BY CALNO DESC
+		 WHERE CALDATE=#{calDate}
+		 ORDER BY CALTIME ASC
 	</select>
+		<delete id="delSchedule" parameterType="Integer">
+		DELETE 
+		  FROM CALENDAR 
+		 WHERE CALNO = #{calNo}
+	</delete>
 </mapper>

@@ -82,7 +82,7 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public List<YearMonthDay> getMonth(String date) {
 		System.out.println("몬쓰 : "+date);
-		List<YearMonthDay> ymd = sql.selectList(namespace+".thismonth",date);
+		List<YearMonthDay> ymd = sql.selectList(namespace+".getMonth",date);
 		return ymd;
 	}
 
@@ -94,8 +94,15 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public List<Calendar> getSchedule(String date) {
+		System.out.println("겟스케쥴 다오 데이트: "+date);
 		List<Calendar> list = sql.selectList(namespace+".getSchedule", date);
 		return list;
+	}
+
+	@Override
+	public int delSchedule(int calNo) {
+		int cnt = sql.delete(namespace + ".delSchedule", calNo);
+		return cnt;
 	}
 
 }

@@ -17,4 +17,5 @@ public interface BoardService {
 	int saveSchedule(Calendar cal);
 	List<YearMonthDay> getMonth(String date);
 	List<Calendar> getSchedule(String date);
+	int delSchedule(int calNo);
 }

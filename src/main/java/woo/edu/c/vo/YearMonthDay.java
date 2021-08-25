@@ -10,6 +10,60 @@ public class YearMonthDay {
 	private String thu;
 	private String fri;
 	private String sat;
+	private String chk_sun;
+	private String chk_mon;
+	private String chk_tue;
+	private String chk_wed;
+	private String chk_thu;
+	private String chk_fri;
+	private String chk_sat;
+	
+	
+	public String getChk_sat() {
+		return chk_sat;
+	}
+	public void setChk_sat(String chk_sat) {
+		this.chk_sat = chk_sat;
+	}
+	public String getChk_sun() {
+		return chk_sun;
+	}
+	public void setChk_sun(String chk_sun) {
+		this.chk_sun = chk_sun;
+	}
+	public String getChk_mon() {
+		return chk_mon;
+	}
+	public void setChk_mon(String chk_mon) {
+		this.chk_mon = chk_mon;
+	}
+	public String getChk_tue() {
+		return chk_tue;
+	}
+	public void setChk_tue(String chk_tue) {
+		this.chk_tue = chk_tue;
+	}
+	public String getChk_wed() {
+		return chk_wed;
+	}
+	public void setChk_wed(String chk_wed) {
+		this.chk_wed = chk_wed;
+	}
+	public String getChk_thu() {
+		return chk_thu;
+	}
+	public void setChk_thu(String chk_thu) {
+		this.chk_thu = chk_thu;
+	}
+	public String getChk_fri() {
+		return chk_fri;
+	}
+	public void setChk_fri(String chk_fri) {
+		this.chk_fri = chk_fri;
+	}
+	public void setWeek_num(String week_num) {
+		this.week_num = week_num;
+	}
 	private String year;
 	public String getYear() {
 		return year;
@@ -73,8 +127,10 @@ public class YearMonthDay {
 	}
 	@Override
 	public String toString() {
-		return "YearMonthDay [week_Num=" + week_num + ", month=" + month + ", mon=" + mon + ", tue=" + tue + ", wed="
-				+ wed + ", thu=" + thu + ", fri=" + fri + ", sat=" + sat + ", sun=" + sun + "]";
+		return "YearMonthDay [week_num=" + week_num + ", month=" + month + ", sun=" + sun + ", mon=" + mon + ", tue="
+				+ tue + ", wed=" + wed + ", thu=" + thu + ", fri=" + fri + ", sat=" + sat + ", chk_sun=" + chk_sun
+				+ ", chk_mon=" + chk_mon + ", chk_tue=" + chk_tue + ", chk_wed=" + chk_wed + ", chk_thu=" + chk_thu
+				+ ", chk_fri=" + chk_fri + ", chk_sat=" + chk_sat + ", year=" + year + "]";
 	}
 	
 }

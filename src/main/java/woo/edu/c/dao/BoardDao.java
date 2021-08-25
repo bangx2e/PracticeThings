@@ -18,6 +18,7 @@ public interface BoardDao {
 	public int deletelist(ArrayList<Integer> boardNums);
 	public List<YearMonthDay> getMonth(String date);
 	public int saveSchedule(Calendar cal);
+	public int delSchedule(int calNo);
 	public List<Calendar> getSchedule(String date);
 	
 }

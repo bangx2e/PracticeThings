@@ -1,6 +1,7 @@
 package woo.edu.c.controller;
 
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import woo.edu.c.dao.BoardDao;
 import woo.edu.c.dao.BoardDaoImpl;
@@ -66,31 +68,19 @@ public class BoardController {
 	}
 	// 달력 페이지 이동
 	@RequestMapping(value = "/board/calendar", method = RequestMethod.GET)
-//	@ResponseBody
 	public String calendar(@RequestParam(value="ywitm" , required=false)String ym, Model model) throws Exception {
 		logger.info("/board/calendar");
-//		Date time = new Date();
-//		Integer year = time.getYear()+1900;
-//		Integer month = time.getMonth()+1;
-//		String y = Integer.toString(year);
-//		String m = String.format("%02d", month);
-//		System.out.println(y+m);
-		System.out.println("ywitm : " + ym);
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyymm");
 		List<YearMonthDay> lists;
 		if(ym==null) {
-			lists=boardService.getMonth("202108");
+			lists=boardService.getMonth(sdf.format(date));
 		}else {
 			lists=boardService.getMonth(ym);
 		}
-//		System.out.println("월 :" + lists.get(0).getMonth());
 		model.addAttribute("getmonth",lists.get(0).getMonth());
 		model.addAttribute("getyear",lists.get(0).getYear());
 		model.addAttribute("ymd",lists);
-		
-		for(YearMonthDay ymd : lists) {
-			System.out.println("ymd is " +ymd);
-		}
-		System.out.println("달력 모델 전송함");
 		return "/board/calendar";
 	}
 //	// 달력 넘기기
@@ -163,15 +153,17 @@ public class BoardController {
 //		return "/board/ajax";
 	}
 	// 스케쥴 가져오기
-	@RequestMapping(value = "/board/getSchedule", method = RequestMethod.GET)
-	public String getSchedule(Model model, String date) throws Exception {
+	@RequestMapping(value = "/board/getSchedule", method = {RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+	public List<Calendar> getSchedule(String date) throws Exception {
 		logger.info("/getSchedule");
 		List<Calendar> cal = boardService.getSchedule(date);
-		model.addAttribute("cal", cal);
-		
+//		model.addAttribute("sche", cal);
+		System.out.println(cal);
 		logger.info("/getSchedule 호출 성공");
-		return "/board/getSchedule";
+		return cal;
 	}
+
 	//스케쥴 저장
 	@RequestMapping(value = "/board/saveschedule", method = RequestMethod.POST)
 	@ResponseBody
@@ -181,15 +173,15 @@ public class BoardController {
 		System.out.println("글써짐" + cal);
 		return "/board/saveschedule";
 	}
-//	//스케쥴 저장
-//	@RequestMapping(value = "/board/saveschedule", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String saveschedule(@RequestBody Map<String,Object> cal,Model model) throws Exception {
-//		logger.info("/saveschedule");
-////		boardService.saveSchedule(cal);
-//		System.out.println("글써짐" + cal);
-//		return "/board/saveschedule";
-//	}
+	//스케쥴 삭제
+	@RequestMapping(value = "/board/delSchedule", method = RequestMethod.GET)
+	@ResponseBody
+	public String delSchedule(int calNo) throws Exception {
+		logger.info("/saveschedule");
+		boardService.delSchedule(calNo);
+		System.out.println("지워짐" + calNo);
+		return "/board/delSchedule";
+	}
 
 	// 글 수정페이지 이동
 	@RequestMapping(value = "/board/update", method = RequestMethod.GET)

@@ -72,5 +72,10 @@ public class BoardServiceImpl implements BoardService{
 		return boardDao.getSchedule(date);
 	}
 
+	@Override
+	public int delSchedule(int calNo) {
+		return boardDao.delSchedule(calNo);
+	}
+
 	
 }

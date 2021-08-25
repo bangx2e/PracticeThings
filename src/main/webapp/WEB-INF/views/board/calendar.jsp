@@ -36,7 +36,9 @@ background: rgba(50,50,250,0.4);
 }
 .red{
 background: rgba(150,50,50,0.4);
-
+}
+.green{
+background: lightgreen;
 }
 #calendar table{
 width:500px;
@@ -90,13 +92,14 @@ border-radius: 10px;w
 			<li role="presentation" class=""><a href="/board/calculator">계산기</a></li>
 			<li role="presentation" class="active"><a href="/board/calendar">캘린더</a></li>
 		</ul>
-		<h1>달력</h1>
 		
 		<div id = "calendar">
-				<button value="" onclick="preMon()"><h1><</h1></button>
-				<input type="text" readonly value="${getmonth}" id = "month">
-				<input type="text" readonly value="${getyear}" id = "year">
-				<button value="" onclick="nexMon()"><h1>></h1></button>
+				<H1>${getyear}</H1>
+				<a onclick="preMon()"><h1 style="display : inline;"><</h1></a>
+				<h2 style="display : inline; margin :20px;">${getmonth}</h2>
+				<input type="hidden" readonly value="${getmonth}" id = "month">
+				<input type="hidden" readonly value="${getyear}" id = "year">
+				<a onclick="nexMon()"><h1 style="display : inline;">></h1></a>
 				<table border="1">
 					<tr>
 						<td>주차</td>
@@ -111,13 +114,49 @@ border-radius: 10px;w
 				<c:forEach var="lis" items="${ymd}">
 						<tr>
 							<td>${lis.week_num}</td>
-							<td class="red"><a onclick="createSchedule(${lis.sun})" >${lis.sun}</a></td>
-							<td><a onclick='createSchedule(${lis.mon})'>${lis.mon}</a></td>
-							<td><a onclick="createSchedule(${lis.tue})">${lis.tue}</a></td>
-							<td><a onclick="createSchedule(${lis.wed})">${lis.wed}</a></td>
-							<td><a onclick="createSchedule(${lis.thu})">${lis.thu}</a></td>
-							<td><a onclick="createSchedule(${lis.fri})">${lis.fri}</a></td>
-							<td class="blue"><a onclick="createSchedule(${lis.sat})">${lis.sat}</a></td>
+							<c:if test="${lis.chk_sun=='Y'}">
+								<td class="green"><a onclick="createSchedule(${lis.sun})" >${lis.sun}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_sun=='N'}">
+								<td class="red"><a onclick="createSchedule(${lis.sun})" >${lis.sun}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_mon=='Y'}">
+								<td class="green"><a onclick="createSchedule(${lis.mon})" >${lis.mon}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_mon=='N'}">
+								<td><a onclick="createSchedule(${lis.mon})" >${lis.mon}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_tue=='Y'}">
+								<td class="green"><a onclick="createSchedule(${lis.tue})" >${lis.tue}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_tue=='N'}">
+								<td><a onclick="createSchedule(${lis.tue})" >${lis.tue}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_wed=='Y'}">
+								<td class="green"><a onclick="createSchedule(${lis.wed})" >${lis.wed}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_wed=='N'}">
+								<td><a onclick="createSchedule(${lis.wed})" >${lis.wed}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_thu=='Y'}">
+								<td class="green"><a onclick="createSchedule(${lis.thu})" >${lis.thu}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_thu=='N'}">
+								<td><a onclick="createSchedule(${lis.thu})" >${lis.thu}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_fri=='Y'}">
+								<td class="green"><a onclick="createSchedule(${lis.fri})" >${lis.fri}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_fri=='N'}">
+								<td><a onclick="createSchedule(${lis.fri})" >${lis.fri}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_sat=='Y'}">
+								<td class="green"><a onclick="createSchedule(${lis.sat})" >${lis.sat}</a></td>
+							</c:if>
+							<c:if test="${lis.chk_sat=='N'}">
+								<td class="blue"><a onclick="createSchedule(${lis.sat})" >${lis.sat}</a></td>
+							</c:if>
+							
 							
 						</tr>
 				</c:forEach>
@@ -128,29 +167,25 @@ border-radius: 10px;w
 	 	<div id="scheduleSpace">
 	 		<form >
 		 			<table id="ScheduleTable">
-	 					<tr><td  colspan="8"><h1>스케쥴 입력</h1></td></tr>
+	 					<tr><td  colspan="8"><h4 style="margin-bottom : 0px;">스케쥴 입력</h4></td></tr>
 	 					<tr>
-	 					<td id="ymd"></td>
-	 					<td><input type="text" class="ymd" id="yyyymmdd"/></td>
-	 					<td><input type="text" id="calYear" name="calYear" value="${getyear}"/></td>
-	 					<td><input type="text" id="calMonth" name="calMonth" value="${getmonth}"/></td>
-	 					<td><input type="text" id="calDay"  name="calDay"/></td>
+	 					<td id="ymd" style="padding-bottom : 5px;"></td>
+	 					<td><input type="hidden" class="ymd" id="yyyymmdd"/></td>
+	 					<td><input type="hidden" id="calYear" name="calYear" value="${getyear}"/></td>
+	 					<td><input type="hidden" id="calMonth" name="calMonth" value="${getmonth}"/></td>
+	 					<td><input type="hidden" id="calDay"  name="calDay"/></td>
 	 					<td><input type="hidden" name="calDay" value="" id="getday"/></td>
 	 					</tr>
-		 				<tr>
-		 					<td class="col1">시간</td>
-		 					<td class="col2">내용</td>
-		 					<td class="col3">중요</td>
-		 					<td class="col4">삭제</td>
-		 				</tr>
-		 				<c:forEach var="lis" items="">
-							<tr>
-								<td class="col1"></td>
-								<td class="col2"></td>
-								<td class="col3"></td>
-								<td class="col4"><a onclick="scheduleDel(calNo)">에이</a></td>
-							</tr>
-						</c:forEach>
+		 				<thead>
+		 					<tr>
+			 					<th class="col1">시간</th>
+			 					<th class="col2">내용</th>
+			 					<th class="col3">중요</th>
+			 					<th class="col4">삭제</th>
+		 					</tr>
+		 				</thead>
+		 				<tbody id="jqueryTable">
+						</tbody>
 		 				<tr>
 		 					<td colspan="4"><legend>시간</legend><input type="time" id="calTime" name="calTime" style="width:150px;height:35px;"/></td>
 		 				</tr>
@@ -158,13 +193,13 @@ border-radius: 10px;w
 		 					<td colspan="4"><legend>내용</legend><input type="text" id="calContents" name="calContents" style="width:100%; height:35px;" placeholder="스케쥴 내용을 입력해 주세요."/></td>
 		 				</tr>
 		 				<tr>
-		 					<td colspan="4"><input type="checkbox" name="calReq" id="checkbox1"/><label for="checkbox1">중요 스케쥴(체크시 * 표시됩니다.)</label></td>
+		 					<td colspan="4"><input type="checkbox" name="calReq" id="calReq"/><label for="calReq">중요 스케쥴(체크시 * 표시됩니다.)</label></td>
 		 					
 		 				</tr>
 		 				<tr>
 		 					<td class="col1"></td>
 		 					<td class="col2"></td>
-		 					<td class="col3"><input type="reset" value="취소"/></td>
+		 					<td class="col3"><input type="reset" value="취소" onclick="closeModal()"/></td>
 		 					<td class="col4"><input type="button" value="저장" onclick="saveSchedule()"/></td>
 		 				</tr>
 		 			</table>
@@ -176,60 +211,18 @@ border-radius: 10px;w
 	    var month ="";
 	    var year = "";
 	    var tm = ${getmonth}-1;
-	    // 	    var ywitm = $('#year').val()+$('#month').val();
-	    
-	    
 		
 		$(document).ready(function(){
-			
-			console.log("겟먼쓰" +typeof tm + tm)
-			console.log("어레이에서 먼쓰:"+arrMonth[tm]);
 			var date = new Date();
-// 			var tm = String((date.getMonth()+1));
 			var ty = String((date.getFullYear()));
-// 			$("#year").val(ty);
 		})
 			
 		//달력에서 보이는 현재 년도와 월
 		function getDocDate(){
 			var month = $('#month').val();
 			var year = $('#year').val();
-			console.log("년" + year);
-			console.log("월" + month);
 		}
 		
-		// 지난달 기능
-// 		function preMonth(){
-// 			var month = $('#month').val();
-// 			var year = $('#year').val();
-// 				if(month =="1"){
-// 					year=$('#year').val(year-1);
-// 					month=$('#month').val(12);;
-// 					console.log('작년으로 갑니다');
-// 				} else {
-// 					month = $('#month').val(month-1);
-// 					console.log('지난달입니다');
-// 				}
-// 				var ywitm = year+("0"+$('#month').val()).slice(-2);
-// 				console.log("ywitm : " + ywitm);
-// 				//비동기 통신
-// 				$.ajax({
-// 					type : 'get',
-// 					url : '/board/calendarCall?ywitm=',
-// // 					data : , //보내는 데이터
-// 					dataType : "html",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
-// 					contentType : "application/json; charset=UTF-8",
-// 					success : function(data) {
-// 						alert('성공');
-// 						$('body').load(data);
-// 					},
-// 					error : function(data) {
-// 						alert('실패');
-// 					}
-// 				});
-// 		}
-
-
 		// 지난달 기능 수정
 		function preMon(){
 			var nowYear = $('#year').val();
@@ -242,21 +235,17 @@ border-radius: 10px;w
 				$('#month').val(arrMonth[changeMonth]);
 			}
 			var ywitm = $('#year').val()+$('#month').val();
-			console.log("와윗엠:" +ywitm);
 
 			//지난달 비동기
 			$.ajax({
 				type : 'get',
 				url : '/board/calendar?ywitm='+ywitm,
-// 					data : ywitm, //보내는 데이터
 				dataType : "html",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
-//					contentType : "application/json; charset=UTF-8",
 				success : function(data) {
-					alert('성공');
 						$('body').html(data);
 				},
 				error : function(data) {
-					alert('실패');
+					console.log("preMon() is Failed : "+ data);
 				}
 			});
 		}
@@ -268,64 +257,58 @@ border-radius: 10px;w
 				var changeYear = parseInt($('#year').val())+1;
 				$('#month').val(arrMonth[0]);
 				$("#year").val(changeYear);
-				console.log("올해는 "+$('#year').val()+"년");
 			} else {
 				var changeMonth = tm+1
 				$('#month').val(arrMonth[changeMonth]);
 			}
-			console.log("비동기전에 year 가져왔어" + $('#year').val());
-			console.log("비동기전에 year 가져왔어" + $('#month').val());
 			var ywitm = $('#year').val()+$('#month').val();
-			console.log("와윗엠:" +ywitm);
 			//다음달 비동기
 			$.ajax({
 				type : 'get',
 				url : '/board/calendar?ywitm='+ywitm,
-// 					data : ywitm, //보내는 데이터
 				dataType : "html",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
-//					contentType : "application/json; charset=UTF-8",
 				success : function(data) {
-					alert('성공');
 					$('body').html(data);
 				},
 				error : function(data) {
-					alert('실패');
+					console.log("nexMon is Failed : "+data);
 				}
 			});
 		}
-		
-		// 다음달 기능
-// 		function nextMonth(){
-// 			var month = $('#month').val();
-// 			var year = $('#year').val();
-// 				if(month =="12"){
-// 					year=$('#year').val(parseInt(year)+1);
-// 					month=$('#month').val(1);;
-// 					console.log('내년으로 갑니다');
-// 				} else {
-// 					month = $('#month').val(parseInt(month)+1);
-// 					console.log('다음달입니다');
-// 				}
-// 			var ywitm = year+("0"+$('#month').val()).slice(-2);
-// 			console.log("ywitm : " + ywitm);
-// 				//비동기 통신
-// 				$.ajax({
-// 					type : 'get',
-// 					url : '/board/calendarChange?ywitm='+ywitm,
-// // 					data : , //보내는 데이터
-// 					dataType : "html",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
-// // 					contentType : "application/json; charset=UTF-8",
-// 					success : function(data) {
-// 						alert('성공');
-// 						console.log(data);
-// // 						$('body').load('/board/calendarChange');
-// 					},
-// 					error : function(data) {
-// 						alert('실패');
-// 					}
-// 				});
-// 		}
+		// 스케쥴 가져오기(저장 후 재로딩용)
+		function getScheduleAjax(calDate){
+			var objArr=[];
+			$.ajax({
+					type : 'GET',
+					url : '/board/getSchedule?date='+calDate,
+					dataType : "json",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
+					success:function(data) {
+						for(var i=0; i<data.length; i++){
+							objArr.push(data[i]);
+						}
+						var html ='';
+						for(key in objArr){
+							html+='<tr>';
+							html+='<td>'+objArr[key].calTime+'</td>';
+							html+='<td>'+objArr[key].calContents+'</td>';
+							if(objArr[key].calReq =='true'){
+								html+='<td style="color : red">*</td>';
+							} else{
+								html+='<td></td>';
+							}
+							html+='<td><a onclick="delSchedule('+objArr[key].calNo+')">삭제</a></td>';
+							html+='</tr>';
+						}
+						$('#jqueryTable').empty();
+						$('#jqueryTable').append(html);
+							},
+					error : function(data) {
+								console.log("getScheduleAjax() Failed : "+ data);
+							}
+					})
+		}
 
+		// 스케쥴 만들기
 		function createSchedule(date){
 			//달에 0붙여주기
 			var thisYear = year;
@@ -333,71 +316,100 @@ border-radius: 10px;w
 			if(date<10){
 				date ="0"+date}
 			var thisDate=date;
-			console.log(thisDate+"일")
-			console.log(typeof thisDate);
-			console.log(typeof date);
 			$("#ymd").text($('#year').val()+"년"+$('#month').val()+"월"+date+"일");
 			$(".ymd").val($('#year').val()+$('#month').val()+date);
 			
-			console.log($("#ymd").val());
-			console.log("ymd값: " + $(".ymd").val());
 			var selectedDate =date;
 			$("#getday").val(date);
 			$("#calDay").val(date);
 			var actualDate = $(".ymd").val();
-			console.log("실제 일:"+actualDate);
 			$('#modal').css('display','block');
 			$('#scheduleSpace').css('display','block');
-	
+			var objArr=[];
 			$.ajax({
 				type : 'GET',
-				url : '/board/getSchedule',
-				data : actualDate, //보내는 데이터
-				dataType : "html",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
-// 				contentType : "application/json; charset=UTF-8",
+				url : '/board/getSchedule?date='+actualDate,
+				dataType : "json",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
 				success : function(data) {
-					alert('성공');
-					console.log(data);
-// 					$('body').load('/board/saveschedule');
+					for(var i=0; i<data.length; i++){
+						objArr.push(data[i]);
+					}
+					var html ='';
+					for(key in objArr){
+						html+='<tr>';
+						html+='<td>'+objArr[key].calTime+'</td>';
+						html+='<td>'+objArr[key].calContents+'</td>';
+						if(objArr[key].calReq =='true'){
+							html+='<td style="color : red">*</td>';
+						} else {
+							html+='<td></td>';
+						}
+						html+='<td><a onclick="delSchedule('+objArr[key].calNo+')">삭제</a></td>';
+						html+='</tr>';
+					}
+					$('#jqueryTable').empty();
+					$('#jqueryTable').append(html);
 				},
 				error : function(data) {
-					alert('실패');
-					console.log(data);
+					console.log("createSchedule is Failed : "+ data);
 				}
 			});
 		}
-
+		
 		function closeModal(){
 			if($("#modal").css('display')==='block'){
 		    	$('#scheduleSpace').hide();
 		    	$('#modal').hide();
 			}
+			var ywitm = $('#year').val()+$('#month').val();
+			location.replace('/board/calendar?ywitm='+ywitm);
 		};
 
 		function saveSchedule(){
+			if($('#calTime').val()==null || $('#calTime').val()=='' ){
+				alert("시간을 입력하세요");
+				return false;
+			}
+			if($('#calContents').val()==null||$('#calContents').val()==''){
+				alert("내용을 입력하세요");
+				return false;
+			}
 			var form ={
 				"calYear":$('#calYear').val(),
 				"calMonth":$('#calMonth').val(),
 				"calDay":$('#calDay').val(),
 				"calTime":$('#calTime').val(),
-				"calReq":$('#checkbox1').val(),
+				"calReq": $('#calReq').is(":checked"),
 				"calDate":$('#yyyymmdd').val(),
 				"calContents":$('#calContents').val()
 				};
-			console.log(form);
-			console.log(JSON.stringify(form));
 			$.ajax({
 				type : 'POST',
 				url : '/board/saveschedule',
 				data : JSON.stringify(form), //보내는 데이터
 				dataType : "html",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
 				contentType : "application/json; charset=UTF-8",
-				success : function() {
-					alert('성공');
-					$('body').load('/board/saveschedule');
+				success : function(data) {
+					$('#jqueryTable').empty();
+					getScheduleAjax($('#yyyymmdd').val());
 				},
 				error : function(data) {
-					alert('실패');
+					console.log("saveSchedule is Failed : "+ data);
+				}
+			});
+		}
+		// 스케쥴 삭제기능
+		function delSchedule(calNo){
+			$.ajax({
+				type : 'GET',
+				url : '/board/delSchedule?calNo='+calNo,
+				dataType : "html",// 보내는타입이 아니라 리턴타입이다!! xml, json, script, html
+				contentType : "application/json; charset=UTF-8",
+				success : function(data) {
+					getScheduleAjax($('#yyyymmdd').val());
+				},
+				error : function(data) {
+					console.log("delSchedule is Failed : " + data);
 				}
 			});
 		}
