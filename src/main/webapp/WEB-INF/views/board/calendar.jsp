@@ -27,6 +27,11 @@ z-index:0;
 /* background: transparent; */
 
 }
+a, a:hover {
+color: gray;
+text-decoration: none;
+
+}
 #calendar {
 
 text-align: center;
@@ -45,16 +50,13 @@ width:500px;
 margin: 0 auto;
 background-color: white;
 }
+#lines :not(:first-child):hover{
+cursor:pointer;
+background-color: gray;
+color :white;
+}
 #ScheduleTable{
-/* border:3px solid greem; */
 position:absolute; 
-/* left:20%; */
-/* right:auto; */
-/* top:150px; */
-/* background-color:white; */
-/* width:50%; */
-/* height:50%; */
-/* border-radius: 10px; */
 z-index:10;
 margin:20px;
 width:95%;
@@ -97,11 +99,11 @@ border-radius: 10px;w
 		
 		<div id = "calendar">
 				<H1>${getyear}</H1>
-				<a onclick="preMon()"><h1 style="display : inline;"><</h1></a>
+				<a onclick="preMon()"><h1 style="display : inline ; cursor:pointer;"><</h1></a>
 				<h2 style="display : inline; margin :20px;">${getmonth}</h2>
 				<input type="hidden" readonly value="${getmonth}" id = "month">
 				<input type="hidden" readonly value="${getyear}" id = "year">
-				<a onclick="nexMon()"><h1 style="display : inline;">></h1></a>
+				<a onclick="nexMon()"><h1 style="display : inline; cursor:pointer;">></h1></a>
 				<table border="1">
 					<tr>
 						<td>주차</td>
@@ -114,7 +116,7 @@ border-radius: 10px;w
 						<td>토요일</td>
 					</tr>
 				<c:forEach var="lis" items="${ymd}">
-						<tr>
+						<tr id="lines">
 							<td>${lis.week_num}</td>
 							<c:if test="${lis.chk_sun=='Y'}">
 								<td class="green" onclick="createSchedule(${lis.sun})" >${lis.sun}</td>
@@ -279,6 +281,7 @@ border-radius: 10px;w
 		}
 		// 스케쥴 가져오기(저장 후 재로딩용)
 		function getScheduleAjax(calDate){
+			
 			var objArr=[];
 			$.ajax({
 					type : 'GET',
@@ -312,6 +315,10 @@ border-radius: 10px;w
 
 		// 스케쥴 만들기
 		function createSchedule(date){
+			if(date ==null){
+				alert('선택할수 없는 날짜입니다.');
+				return;
+			}
 			//달에 0붙여주기
 			var thisYear = year;
 			var thisMonth = month;
