@@ -80,14 +80,16 @@ border-radius: 10px;w
 	
 		<ul class="nav nav-tabs">
 			<li role="presentation"><a href="/">Home</a></li>
-			<li role="dropdown-toggle" class="dropdown"><a
-				class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-				aria-expanded="false"> 게시판 <span class="caret"></span>
-			</a>
+			<li role="dropdown-toggle" class="dropdown">
+				<a
+					class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+					aria-expanded="false"> 게시판 <span class="caret"></span>
+				</a>
 				<ul class="dropdown-menu" role="menu">
 					<li><a href="/board/home">게시판</a>
 					<li><a href="/board/ajax">게시판 Ajax</a>
-				</ul></li>
+				</ul>
+			</li>
 			<li role="presentation" class=""><a href="/board/test">test</a></li>
 			<li role="presentation" class=""><a href="/board/calculator">계산기</a></li>
 			<li role="presentation" class="active"><a href="/board/calendar">캘린더</a></li>
@@ -115,46 +117,46 @@ border-radius: 10px;w
 						<tr>
 							<td>${lis.week_num}</td>
 							<c:if test="${lis.chk_sun=='Y'}">
-								<td class="green"><a onclick="createSchedule(${lis.sun})" >${lis.sun}</a></td>
+								<td class="green" onclick="createSchedule(${lis.sun})" >${lis.sun}</td>
 							</c:if>
 							<c:if test="${lis.chk_sun=='N'}">
-								<td class="red"><a onclick="createSchedule(${lis.sun})" >${lis.sun}</a></td>
+								<td class="red" a onclick="createSchedule(${lis.sun})" >${lis.sun}</td>
 							</c:if>
 							<c:if test="${lis.chk_mon=='Y'}">
-								<td class="green"><a onclick="createSchedule(${lis.mon})" >${lis.mon}</a></td>
+								<td class="green" onclick="createSchedule(${lis.mon})" >${lis.mon}</td>
 							</c:if>
 							<c:if test="${lis.chk_mon=='N'}">
-								<td><a onclick="createSchedule(${lis.mon})" >${lis.mon}</a></td>
+								<td onclick="createSchedule(${lis.mon})" >${lis.mon}</td>
 							</c:if>
 							<c:if test="${lis.chk_tue=='Y'}">
-								<td class="green"><a onclick="createSchedule(${lis.tue})" >${lis.tue}</a></td>
+								<td class="green" onclick="createSchedule(${lis.tue})" >${lis.tue}</td>
 							</c:if>
 							<c:if test="${lis.chk_tue=='N'}">
-								<td><a onclick="createSchedule(${lis.tue})" >${lis.tue}</a></td>
+								<td onclick="createSchedule(${lis.tue})" >${lis.tue}</td>
 							</c:if>
 							<c:if test="${lis.chk_wed=='Y'}">
-								<td class="green"><a onclick="createSchedule(${lis.wed})" >${lis.wed}</a></td>
+								<td class="green" onclick="createSchedule(${lis.wed})" >${lis.wed}</td>
 							</c:if>
 							<c:if test="${lis.chk_wed=='N'}">
-								<td><a onclick="createSchedule(${lis.wed})" >${lis.wed}</a></td>
+								<td onclick="createSchedule(${lis.wed})" >${lis.wed}</td>
 							</c:if>
 							<c:if test="${lis.chk_thu=='Y'}">
-								<td class="green"><a onclick="createSchedule(${lis.thu})" >${lis.thu}</a></td>
+								<td class="green" onclick="createSchedule(${lis.thu})" >${lis.thu}</td>
 							</c:if>
 							<c:if test="${lis.chk_thu=='N'}">
-								<td><a onclick="createSchedule(${lis.thu})" >${lis.thu}</a></td>
+								<td onclick="createSchedule(${lis.thu})" >${lis.thu}</td>
 							</c:if>
 							<c:if test="${lis.chk_fri=='Y'}">
-								<td class="green"><a onclick="createSchedule(${lis.fri})" >${lis.fri}</a></td>
+								<td class="green" onclick="createSchedule(${lis.fri})" >${lis.fri}</td>
 							</c:if>
 							<c:if test="${lis.chk_fri=='N'}">
-								<td><a onclick="createSchedule(${lis.fri})" >${lis.fri}</a></td>
+								<td onclick="createSchedule(${lis.fri})" >${lis.fri}</td>
 							</c:if>
 							<c:if test="${lis.chk_sat=='Y'}">
-								<td class="green"><a onclick="createSchedule(${lis.sat})" >${lis.sat}</a></td>
+								<td class="green" onclick="createSchedule(${lis.sat})" >${lis.sat}</td>
 							</c:if>
 							<c:if test="${lis.chk_sat=='N'}">
-								<td class="blue"><a onclick="createSchedule(${lis.sat})" >${lis.sat}</a></td>
+								<td class="blue" onclick="createSchedule(${lis.sat})" >${lis.sat}</td>
 							</c:if>
 							
 							
@@ -301,11 +303,11 @@ border-radius: 10px;w
 						}
 						$('#jqueryTable').empty();
 						$('#jqueryTable').append(html);
-							},
+					},
 					error : function(data) {
-								console.log("getScheduleAjax() Failed : "+ data);
-							}
-					})
+						console.log("getScheduleAjax() Failed : "+ data);
+					}
+			})
 		}
 
 		// 스케쥴 만들기
@@ -314,7 +316,8 @@ border-radius: 10px;w
 			var thisYear = year;
 			var thisMonth = month;
 			if(date<10){
-				date ="0"+date}
+				date ="0"+date
+			}
 			var thisDate=date;
 			$("#ymd").text($('#year').val()+"년"+$('#month').val()+"월"+date+"일");
 			$(".ymd").val($('#year').val()+$('#month').val()+date);
