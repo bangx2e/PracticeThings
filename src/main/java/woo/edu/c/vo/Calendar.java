@@ -9,6 +9,13 @@ public class Calendar {
 	private String calReq;
 	private String calDate;
 	private String calContents;
+	private String useYN;
+	public String getUseYN() {
+		return useYN;
+	}
+	public void setUseYN(String useYN) {
+		this.useYN = useYN;
+	}
 	public String getCalNo() {
 		return calNo;
 	}
