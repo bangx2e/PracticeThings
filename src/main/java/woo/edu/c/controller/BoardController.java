@@ -70,11 +70,15 @@ public class BoardController {
 	@RequestMapping(value = "/board/calendar", method = RequestMethod.GET)
 	public String calendar(@RequestParam(value="ywitm" , required=false)String ym, Model model) throws Exception {
 		logger.info("/board/calendar");
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyymm");
+		// ywitm이 null값이 들어올 경우 calendar에 현재 시스템의 년,월을 셋팅 해주는 코드
+		Date date_now = new Date(System.currentTimeMillis());
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
+		String date = format.format(date_now);
+//		System.out.println(date);
+		
 		List<YearMonthDay> lists;
 		if(ym==null) {
-			lists=boardService.getMonth(sdf.format(date));
+			lists=boardService.getMonth(date);
 		}else {
 			lists=boardService.getMonth(ym);
 		}
@@ -83,32 +87,7 @@ public class BoardController {
 		model.addAttribute("ymd",lists);
 		return "/board/calendar";
 	}
-//	// 달력 넘기기
-//		@RequestMapping(value = "/board/calendarChange", method = RequestMethod.GET)
-//		@ResponseBody
-//		public List<YearMonthDay> calendarChange(@RequestParam("ywitm") String date,Model model) throws Exception {
-//			logger.info("/board/calendarChange");
-//			System.out.println("데이트 :" + date);
-//			List<YearMonthDay> lists=boardService.getMonth(date);
-//			List<YearMonthDay> lists=boardService.getMonth(date);
-//			model.addAttribute("ymd",lists);
-//			System.out.println("달력 모델 전송함");
-//			return lists;
-//	}
-//		// 달력 넘기기
-//		@RequestMapping(value = "/board/calendarCall", method = RequestMethod.GET)
-//		@ResponseBody
-//		public String calendarCall(@RequestParam("ywitm") String date,Model model) throws Exception {
-//			logger.info("/board/calendarChange");
-//			System.out.println("데이트 :" + date);
-//			List<YearMonthDay> lists=boardService.getMonth(date);
-//			model.addAttribute("cm",lists);
-//			for(YearMonthDay v : lists) {
-//				System.out.println(v);
-//			}
-//			System.out.println("달력 모델 전송함");
-//			return "/board/calendar";
-//		}
+	
 	// 글 작성페이지
 	@RequestMapping(value = "/board/reg", method = RequestMethod.GET)
 	public String reg(Model model) throws Exception {
@@ -158,9 +137,10 @@ public class BoardController {
 	public List<Calendar> getSchedule(String date) throws Exception {
 		logger.info("/getSchedule");
 		List<Calendar> cal = boardService.getSchedule(date);
-//		model.addAttribute("sche", cal);
+		//model.addAttribute("sche", cal); //Ajax Json으로 하기때문에 model로 해줄 필요가 없다.
 		System.out.println(cal);
 		logger.info("/getSchedule 호출 성공");
+		// return 한 값은 ajax의 success : function(data)의 data로 넘어간다
 		return cal;
 	}
 
@@ -172,7 +152,7 @@ public class BoardController {
 		boardService.saveSchedule(cal);
 		System.out.println("글써짐" + cal);
 		return "/board/saveschedule";
-	}
+	}	
 	//스케쥴 삭제
 	@RequestMapping(value = "/board/delSchedule", method = RequestMethod.GET)
 	@ResponseBody

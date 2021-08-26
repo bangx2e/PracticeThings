@@ -174,6 +174,7 @@
 				* 
 		  FROM CALENDAR 
 		 WHERE CALDATE=#{calDate}
+		 
 		 ORDER BY CALTIME ASC
 	</select>
 		<delete id="delSchedule" parameterType="Integer">
